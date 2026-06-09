@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRUD Usuarios</title>
+</head>
+<body>
+
+    <h1>CRUD Usuarios</h1>
+
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="text" id="correo" placeholder="Correo">
+
+    <button onclick="crearUsuario()">
+        Crear Usuario
+    </button>
+
+    <hr>
+
+    <div id="usuarios"></div>
+
+    <script>
+
+        async function obtenerUsuarios() {
+
+            const response = await fetch('/usuarios');
+
+            const usuarios = await response.json();
+
+            let html = '';
+
+            usuarios.forEach(usuario => {
+
+                html += `
+                    <p>
+                        ${usuario.nombre} - ${usuario.correo}
+
+                        <button onclick="eliminarUsuario(${usuario.id})">
+                            Eliminar
+                        </button>
+                    </p>
+                `;
+            });
+
+            document.getElementById('usuarios').innerHTML = html;
+        }
+
+        async function crearUsuario() {
+
+            const nombre = document.getElementById('nombre').value;
+
+            const correo = document.getElementById('correo').value;
+
+            await fetch('/usuarios', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    nombre,
+                    correo
+                })
+            });
+
+            obtenerUsuarios();
+        }
+
+        async function eliminarUsuario(id) {
+
+            await fetch(`/usuarios/${id}`, {
+                method: 'DELETE'
+            });
+
+            obtenerUsuarios();
+        }
+
+        obtenerUsuarios();
+
+    </script>
+
+</body>
+</html>

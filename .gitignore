@@ -1,0 +1,7 @@
+.terraform/
+*.tfstate
+*.tfstate.backup
+token.txt
+.env
+crud-python/venv/
+crud-python/__pycache__/
